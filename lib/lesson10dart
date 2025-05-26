@@ -1,0 +1,135 @@
+import 'package:flutter/material.dart';
+
+void main(List<String> args) {
+  print("hello");
+  runApp(MaterialApp(home: Scaffold(body: Myapp())));
+}
+
+class Myapp extends StatefulWidget {
+  const Myapp({super.key});
+
+  @override
+  State<Myapp> createState() => _MyappState();
+}
+
+class _MyappState extends State<Myapp> {
+  String? _selectedValue;
+  bool _isChecked = false;
+  double _sliderValue = 0.5;
+  bool Checkboxvvalue = false;
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text('Radio Sample', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        ),
+        ListTile(
+          leading: Radio<String>(
+            value: "lafayette",
+            groupValue: _selectedValue,
+            onChanged: (value) {
+              setState(() {
+                _selectedValue = value;
+              });
+            },
+          ),
+          title: Text('Lafayette'),
+        ),
+        ListTile(
+          leading: Radio<String>(
+            value: "thomas_jefferson",
+            groupValue: _selectedValue,
+            onChanged: (value) {
+              setState(() {
+                _selectedValue = value;
+              });
+            },
+          ),
+          title: Text('Thomas Jefferson'),
+        ),
+
+        Text('Selected: ${_selectedValue ?? "None"}'),
+
+        Divider(),
+        Divider(),
+        ListTile(
+          leading: Switch(
+            value: _isChecked,
+
+            onChanged: (bool value) {
+              print("switch");
+              setState(() {
+                _isChecked = value;
+              });
+            },
+          ),
+          title: Text('Switch'),
+        ),
+        Text('switch value:), ${_isChecked.toString()}'),
+
+        Divider(),
+        Slider(
+          value: _sliderValue,
+          secondaryTrackValue: 1,
+          label: "asd",
+          onChanged: (double value) {
+            setState(() {
+              _sliderValue = value;
+            });
+          },
+        ),
+        Text('slider value: ${_sliderValue.toStringAsFixed(2)}'),
+        Divider(),
+        ListTile(
+          leading: Checkbox(
+            tristate: true,
+            value: Checkboxvvalue,
+            onChanged: (bool? value) {
+              setState(() {
+                Checkboxvvalue = !Checkboxvvalue;
+              });
+            },
+          ),
+          title: Text('checkbox'),
+        ),
+        Text('checkbox value: ${Checkboxvvalue.toString()}'),
+        Divider(),
+        TextField(
+          controller: _controller,
+          // obscureText: true,
+          decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'password'),
+          onChanged: (value) {
+            setState(() {
+              // Update the text field value without directly modifying the controller's text
+            });
+          },
+        ),
+        Text('Input value: ${_controller.text}'),
+        Divider(),
+        CircularProgressIndicator(value: 0.5, strokeWidth: 10, backgroundColor: Colors.red, color: Colors.green),
+        Divider(),
+        TextButton(
+          onPressed: () {
+            print("recepie cilck");
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Awesome Snackbar!'),
+                // action: SnackBarAction(
+                //   label: 'Action',
+                //   onPressed: () {
+                //     // Code to execute.
+                //   },
+                // ),
+              ),
+            );
+          },
+          child: Text("add to cart"),
+        ),
+      ],
+    );
+  }
+}
