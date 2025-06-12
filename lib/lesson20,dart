@@ -1,0 +1,133 @@
+import 'package:flutter/material.dart';
+
+void main(List<String> args) {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(title: "fulter down", theme: ThemeData(), home: HomeScreen());
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<Widget> _screens = [screen1(), screen2(), screen3()];
+  int index = 1;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected:
+            (value) => {
+              setState(() {
+                index = value;
+              }),
+            },
+        destinations: const <Widget>[
+          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
+          NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+      ),
+      appBar: AppBar(title: Text('Home Screen')),
+      body: _screens[index],
+    );
+  }
+}
+
+class screen1 extends StatelessWidget {
+  const screen1({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (ctx) => Container(padding: EdgeInsets.all(16), height: 200, width: 500, child: screen1()),
+            );
+
+            print("hwllo");
+          },
+          child: Text("show bottom sheet"),
+        ),
+        TextButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder:
+                  (ctx) => AlertDialog(
+                    title: Text('Delete Item'),
+                    content: Text('Are you sure?'),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel')),
+                      TextButton(onPressed: () => {}, child: Text('Yes')),
+                    ],
+                  ),
+            );
+
+            print("on cilck");
+          },
+          child: Text("alertdialog"),
+        ),
+        TextButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                action: SnackBarAction(
+                  label: 'dismiss',
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
+                ),
+                content: const Text('Awesome Snackbar!'),
+              ),
+            );
+            print("cilckme");
+          },
+          child: Text("sackbar"),
+        ),
+      ],
+    );
+  }
+}
+
+class screen2 extends StatelessWidget {
+  const screen2({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Text("screen2");
+  }
+}
+
+class screen3 extends StatelessWidget {
+  const screen3({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("hello"),
+          bottom: TabBar(
+            labelColor: Colors.blue,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: Colors.red,
+            tabs: [Tab(text: 'Home', icon: Icon(Icons.import_contacts)), Tab(text: 'Search'), Tab(text: 'Profile')],
+          ),
+        ),
+        body: TabBarView(children: [screen1(), screen2(), screen1()]),
+      ),
+    );
+  }
+}
