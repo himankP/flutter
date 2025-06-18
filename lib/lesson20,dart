@@ -25,6 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+
+      
       bottomNavigationBar: NavigationBar(
         onDestinationSelected:
             (value) => {
@@ -38,6 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
           NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
+
+
+
+
+
       appBar: AppBar(title: Text('Home Screen')),
       body: _screens[index],
     );

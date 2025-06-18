@@ -185,7 +185,7 @@ class Mycard extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
 
-                Image.asset("images/image1.jpg", width: 300),
+                Hero(tag: 'image1', child: Image.asset("images/image1.jpg", width: 300)),
                 SizedBox(height: 20),
 
                 Text("geryhound divisively hello coldly wonderfull marginally far upon excluding"),
