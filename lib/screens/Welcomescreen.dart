@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Homescreen.dart';
 
 class Welcomescreen extends StatelessWidget {
   const Welcomescreen({super.key});
@@ -7,26 +8,34 @@ class Welcomescreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Center(
-        child: Column(
-          children: [
-            Text("asdas"),
+        child: Card(
+          margin: const EdgeInsets.all(20),
+          color: Colors.white,
+          elevation: 10,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            children: [
+              Image.asset("images/image3.jpeg", width: 200, height: 200, fit: BoxFit.cover),
+              SizedBox(height: 20),
 
-            Image.asset("images/image3.jpeg", width: 200, height: 200, fit: BoxFit.cover),
-            SizedBox(height: 20),
+              Text("wecomletothe ricpen", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
+              Text(
+                "browse delicious recpies from round the world",
+                style: TextStyle(fontSize: 16, color: Colors.blue[600]),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Navigator.pushNamed(context, '/homescreen');
+                  // Alternatively, you can use:
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Homescreen()));
+                },
 
-            Text("wecomletothe ricpen", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Text(
-              "browse delicious recpies from round the world",
-              style: TextStyle(fontSize: 16, color: Colors.blue[600]),
-            ),
-            TextButton(
-              onPressed: () {},
-
-              child: Text("Get Started", style: TextStyle(fontSize: 20, color: Colors.green)),
-            ),
-            SizedBox(height: 20),
-          ],
+                child: Text("Get Started", style: TextStyle(fontSize: 20, color: Colors.green)),
+              ),
+              SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
