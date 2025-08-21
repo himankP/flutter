@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -42,39 +45,58 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _isLoading = true;
+  List<dynamic> _categories = [];
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _fetchCategories();
   }
 
-  @override
-  void deactivate() {
-    // TODO: implement deactivate
-    super.deactivate();
-  }
-
-  @override
-  void activate() {
-    // TODO: implement activate
-    super.activate();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
+  Future<void> _fetchCategories() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final url = Uri.parse('https://www.themealdb.com/api/json/v1/1/categories.php');
+      final res = await http.get(url);
+      if (res.statusCode != 200) {
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+      final data = jsonDecode(res.body);
+      setState(() {
+        _categories = data['categories'] ?? [];
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Home Page.'));
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (_categories.isEmpty) {
+      return const Center(child: Text('No categories found.'));
+    }
+    return ListView.builder(
+      itemCount: _categories.length,
+      itemBuilder: (context, index) {
+        final category = _categories[index];
+        return ListTile(
+          title: Text(category['strCategory'] ?? 'Unknown'),
+          subtitle: Text(category['strCategoryDescription'] ?? ''),
+        );
+      },
+    );
   }
 }
 
