@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sample/screens/Homescreen.dart';
 import 'package:sample/screens/Welcomescreen.dart';
 
 void main(List<String> args) {
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Sample App',
       theme: ThemeData(primarySwatch: Colors.blue),
 
-      home: Scaffold(appBar: AppBar(title: const Text('Sample App Home Page')), body: Welcomescreen()),
+      home: Scaffold(appBar: AppBar(title: const Text('Sample App Home Page')), body: Homescreen()),
       // home: Scaffold(
       //   appBar: AppBar(title: const Text('Sample App Home Page')),
       //   body: const Center(child: Text('Welcome to the Sample App!')),

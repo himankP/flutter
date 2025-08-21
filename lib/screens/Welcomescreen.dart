@@ -5,14 +5,14 @@ class Welcomescreen extends StatelessWidget {
   const Welcomescreen({super.key});
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Center(
-        child: Card(
-          margin: const EdgeInsets.all(20),
-          color: Colors.white,
-          elevation: 10,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    return Center(
+      child: Card(
+        margin: const EdgeInsets.all(20),
+        color: Colors.white,
+        elevation: 10,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               Image.asset("images/image3.jpeg", width: 200, height: 200, fit: BoxFit.cover),
@@ -26,6 +26,7 @@ class Welcomescreen extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
+                  SizedBox(height: 20);
                   // Navigator.pushNamed(context, '/homescreen');
                   // Alternatively, you can use:
                   Navigator.push(context, MaterialPageRoute(builder: (context) => Homescreen()));
@@ -33,7 +34,6 @@ class Welcomescreen extends StatelessWidget {
 
                 child: Text("Get Started", style: TextStyle(fontSize: 20, color: Colors.green)),
               ),
-              SizedBox(height: 20),
             ],
           ),
         ),
