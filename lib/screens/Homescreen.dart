@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:sample/models/category.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -46,12 +47,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _isLoading = true;
-  List<dynamic> _categories = [];
+  // List<dynamic> _categories = [];
+  List<Category> _categoryObjects = [];
 
   @override
   void initState() {
     super.initState();
     _fetchCategories();
+  }
+
+  void didchangeDependencies() {
+    super.didChangeDependencies();
+    print(_categoryObjects);
+  }
+
+  void didupdateWidget(covariant HomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print(_categoryObjects);
   }
 
   Future<void> _fetchCategories() async {
@@ -69,7 +81,8 @@ class _HomePageState extends State<HomePage> {
       }
       final data = jsonDecode(res.body);
       setState(() {
-        _categories = data['categories'] ?? [];
+        // _categories = data['categories'] ?? [];
+        _categoryObjects = CategoryList.fromJson(data).categories;
         _isLoading = false;
       });
     } catch (e) {
@@ -81,22 +94,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print(_categoryObjects);
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (_categories.isEmpty) {
-      return const Center(child: Text('No categories found.'));
-    }
-    return ListView.builder(
-      itemCount: _categories.length,
-      itemBuilder: (context, index) {
-        final category = _categories[index];
-        return ListTile(
-          title: Text(category['strCategory'] ?? 'Unknown'),
-          subtitle: Text(category['strCategoryDescription'] ?? ''),
-        );
-      },
-    );
+
+    return Text("daata");
   }
 }
 
