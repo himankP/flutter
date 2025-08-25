@@ -99,7 +99,20 @@ class _HomePageState extends State<HomePage> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return Text("daata");
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Seaachbar(),
+          SizedBox(height: 20),
+
+          Text('Categories', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Padding(padding: const EdgeInsets.all(8.0), child: Row(children: [Text("Beef")])),
+        ],
+      ),
+    );
   }
 }
 
@@ -127,5 +140,17 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(child: Text('Setting Page'));
+  }
+}
+
+class Seaachbar extends StatelessWidget {
+  const Seaachbar({super.key});
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController controller = TextEditingController();
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(hintText: 'search...', prefixIcon: Icon(Icons.search), border: OutlineInputBorder()),
+    );
   }
 }

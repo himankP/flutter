@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Sample App',
       theme: ThemeData(primarySwatch: Colors.blue),
 
-      home: Scaffold(appBar: AppBar(title: const Text('Sample App Home Page')), body: Homescreen()),
+      home: Scaffold(appBar: AppBar(title: const Text('Home')), body: Homescreen()),
       // home: Scaffold(
       //   appBar: AppBar(title: const Text('Sample App Home Page')),
       //   body: const Center(child: Text('Welcome to the Sample App!')),
