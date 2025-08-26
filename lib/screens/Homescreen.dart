@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:sample/models/category.dart';
+import 'package:sample/models/meals.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -49,6 +51,7 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = true;
   // List<dynamic> _categories = [];
   List<Category> _categoryObjects = [];
+  final List<Meal> _meals = [];
 
   @override
   void initState() {
@@ -91,6 +94,26 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
+  //https://www.themealdb.com/api/json/v1/1/filter.php?c=Beef
+  // _fetchCategoriesItems(String category)
+
+  _fetchCategoriesItems(String category) async {
+    try {
+      final url = Uri.parse('https://www.themealdb.com/api/json/v1/1/filter.php?c=$category');
+      final res = await http.get(url);
+      if (res.statusCode != 200) {
+        return;
+      }
+      final data = jsonDecode(res.body);
+
+      setState(() {
+        _meals.clear();
+        _meals.addAll(MealsResponse.fromJson(data).meals);
+      });
+
+      print(_meals);
+    } catch (e) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +130,56 @@ class _HomePageState extends State<HomePage> {
         children: [
           Seaachbar(),
           SizedBox(height: 20),
-
           Text('Categories', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          Padding(padding: const EdgeInsets.all(8.0), child: Row(children: [Text("Beef")])),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    for (var category in _categoryObjects) ...[
+                      ElevatedButton(
+                        onPressed: () {
+                          // Add your button logic here
+                          _fetchCategoriesItems(category.strCategory);
+                        },
+                        child: Text(category.strCategory),
+                      ),
+                      SizedBox(width: 8),
+                    ], // Add spacing between buttons
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 400,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (var meal in _meals) ...[
+                    Card(
+                      child: Column(
+                        children: [
+                          if (meal.strMealThumb != null)
+                            Image.network(height: 50, meal.strMealThumb!)
+                          else
+                            SizedBox.shrink(),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(meal.strMeal, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                  ],
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
