@@ -110,7 +110,6 @@ class _HomePageState extends State<HomePage> {
         _meals.clear();
         _meals.addAll(MealsResponse.fromJson(data).meals);
       });
-
       print(_meals);
     } catch (e) {}
   }
@@ -160,18 +159,25 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   for (var meal in _meals) ...[
-                    Card(
-                      child: Column(
-                        children: [
-                          if (meal.strMealThumb != null)
-                            Image.network(height: 50, meal.strMealThumb!)
-                          else
-                            SizedBox.shrink(),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(meal.strMeal, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          ),
-                        ],
+                    InkWell(
+                      onTap: () {
+                        // Handle card tap if needed
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => RecipePage(id: meal.idMeal)));
+                      },
+                      child: Card(
+                        child: Column(
+                          children: [
+                            if (meal.strMealThumb != null)
+                              Image.network(height: 50, meal.strMealThumb!)
+                            else
+                              SizedBox.shrink(),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(meal.strMeal, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: 8),
@@ -203,7 +209,6 @@ class ShoppingListPage extends StatelessWidget {
     return Center(child: Text('Shopping List Page'));
   }
 }
-
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
 
@@ -224,3 +229,62 @@ class Seaachbar extends StatelessWidget {
     );
   }
 }
+
+class RecipePage extends StatefulWidget {
+  final String id;
+  const RecipePage({super.key, required this.id});
+
+  @override
+  State<RecipePage> createState() => _RecipePageState();
+}
+
+class _RecipePageState extends State<RecipePage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("initstate");
+  }
+
+  @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+    print("deactivate");
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    print("didChangeDependencies");
+  }
+
+  @override
+  void activate() {
+    // TODO: implement activate
+    super.activate();
+    print("activate");
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print("dispose");
+  }
+
+  @override
+  final bool _isLoading = true;
+  @override
+  Widget build(BuildContext context) {
+    print(widget.id);
+    return Scaffold(appBar: AppBar(title: Text('Recipe Page')), body: Center(child: 
+    
+    _isLoading ? CircularProgressIndicator() :
+    
+    Text('Recipe Details Here')));
+  }
+}
+
+// a?b:c
