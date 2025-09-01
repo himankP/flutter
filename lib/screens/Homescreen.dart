@@ -209,6 +209,7 @@ class ShoppingListPage extends StatelessWidget {
     return Center(child: Text('Shopping List Page'));
   }
 }
+
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
 
@@ -239,12 +240,38 @@ class RecipePage extends StatefulWidget {
 }
 
 class _RecipePageState extends State<RecipePage> {
+  bool _isLoading = true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     print("initstate");
+    _fetchid(widget.id);
   }
+
+  _fetchid(String id) async {
+    try {
+      final url = Uri.parse('https://www.themealdb.com/api/json/v1/1/lookup.php?i=$id');
+      final res = await http.get(url);
+      if (res.statusCode != 200) {
+        return;
+      }
+      final data = jsonDecode(res.body);
+
+      setState(() {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+      print(data);
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  //https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772
 
   @override
   void deactivate() {
@@ -275,15 +302,13 @@ class _RecipePageState extends State<RecipePage> {
   }
 
   @override
-  final bool _isLoading = true;
   @override
   Widget build(BuildContext context) {
     print(widget.id);
-    return Scaffold(appBar: AppBar(title: Text('Recipe Page')), body: Center(child: 
-    
-    _isLoading ? CircularProgressIndicator() :
-    
-    Text('Recipe Details Here')));
+    return Scaffold(
+      appBar: AppBar(title: Text('Recipe Page')),
+      body: Center(child: _isLoading ? CircularProgressIndicator() : Text('Recipe Details Here')),
+    );
   }
 }
 
