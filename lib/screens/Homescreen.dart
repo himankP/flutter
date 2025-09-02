@@ -6,6 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:sample/models/category.dart';
 import 'package:sample/models/meals.dart';
+import 'package:sample/models/recipe.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -241,6 +243,7 @@ class RecipePage extends StatefulWidget {
 
 class _RecipePageState extends State<RecipePage> {
   bool _isLoading = true;
+  Recipe? _recipe;
   @override
   void initState() {
     // TODO: implement initState
@@ -257,6 +260,11 @@ class _RecipePageState extends State<RecipePage> {
         return;
       }
       final data = jsonDecode(res.body);
+      // Parse the recipe details from API response
+      final recipeJson = (data['meals'] as List?)?.first;
+      if (recipeJson != null) {
+        _recipe = Recipe.fromJson(recipeJson);
+      }
 
       setState(() {
         setState(() {
@@ -304,10 +312,79 @@ class _RecipePageState extends State<RecipePage> {
   @override
   @override
   Widget build(BuildContext context) {
-    print(widget.id);
+    // print(widget.id); // Remove print for production
     return Scaffold(
       appBar: AppBar(title: Text('Recipe Page')),
-      body: Center(child: _isLoading ? CircularProgressIndicator() : Text('Recipe Details Here')),
+      body: Center(
+        child:
+            _isLoading
+                ? CircularProgressIndicator()
+                : _recipe == null
+                ? Text('Recipe not found')
+                : SingleChildScrollView(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.network(_recipe!.strMealThumb, height: 200),
+                      SizedBox(height: 16),
+                      Text(_recipe!.strMeal, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 8),
+                      Text('Category: ${_recipe!.strCategory}', style: TextStyle(fontSize: 16)),
+                      SizedBox(height: 8),
+                      Text('Area: ${_recipe!.strArea}', style: TextStyle(fontSize: 16)),
+                      SizedBox(height: 16),
+                      Text('Instructions:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 8),
+                      Text(_recipe!.strInstructions),
+                      SizedBox(height: 16),
+                      Text('Ingredients:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 8),
+                      // ..._buildIngredients(_recipe!),
+                      if (_recipe!.strYoutube.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder:
+                                    (context) => AlertDialog(
+                                      title: Text('Open YouTube Video'),
+                                      content: Text('Do you want to open the YouTube video for this recipe?'),
+                                      actions: [
+                                        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
+                                        TextButton(
+                                          onPressed: () async {
+                                            Navigator.of(context).pop();
+                                            final url = _recipe!.strYoutube;
+                                            final uri = Uri.parse(url);
+                                            if (await canLaunchUrl(uri)) {
+                                              await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                            }
+                                          },
+                                          child: Text('Open'),
+                                        ),
+                                      ],
+                                    ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Icon(Icons.video_library, color: Colors.red),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Watch on YouTube',
+                                  style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+      ),
     );
   }
 }
